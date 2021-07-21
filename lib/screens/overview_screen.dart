@@ -60,7 +60,17 @@ class _OverviewScreenState extends State<OverviewScreen> {
         centerTitle: true,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      body: BlocBuilder<VideosBloc, VideosState>(
+      body: BlocConsumer<VideosBloc, VideosState>(
+        listener: (context, state) {
+          if (state is VideosAreNotLoaded) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    'An error has occurred.\nCheck your internet connection.'),
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is VideosAreLoading)
             return Center(child: CircularProgressIndicator());
@@ -68,15 +78,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
             return listOfVideos(state.getData);
           } else if (state is VideosAreSorted) {
             return listOfVideos(state.sortedData);
-          } else {
-            return Center(
-              child: Text(
-                'An error has occurred.\nCheck your internet connection.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15, color: Colors.white),
-              ),
-            );
-          }
+          } else
+            return Container();
         },
       ),
     );
