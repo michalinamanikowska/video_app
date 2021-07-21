@@ -13,10 +13,14 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  @override
-  void initState() {
+  void startConnection() {
     final videosBloc = BlocProvider.of<VideosBloc>(context);
     videosBloc.add(FetchVideos());
+  }
+
+  @override
+  void initState() {
+    startConnection();
     super.initState();
   }
 
@@ -79,7 +83,14 @@ class _OverviewScreenState extends State<OverviewScreen> {
           } else if (state is VideosAreSorted) {
             return listOfVideos(state.sortedData);
           } else
-            return Container();
+            return Center(
+              child: ElevatedButton(
+                  child: Text(
+                    'RESTART',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: startConnection),
+            );
         },
       ),
     );
